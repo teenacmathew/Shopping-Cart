@@ -1,7 +1,8 @@
 var Q = require('q');
 module.exports = {
 
-    postItem : function(req,res) {
+    postItem : function(req) {
+        var defer = Q.defer();
         var id = req.params.id;
         var data = {
             "error":1,
@@ -15,15 +16,17 @@ module.exports = {
                     data["error"] = 0;
                     data["items"] = "Item Added to cart Successfully";
                 }
-                res.json(data);
+                defer.resolve(data);
             });
         }else{
             data["items"] = "Please provide required data ";
-            res.json(data);
+            defer.reject(data);
         }
+        return defer.promise;
     },
 
-    deleteItem : function(req,res) {
+    deleteItem : function(req) {
+        var defer = Q.defer();
         var id = req.params.id;
         var data = {
             "error":1,
@@ -37,30 +40,32 @@ module.exports = {
                     data["error"] = 0;
                     data["item"] = "Delete Item Successfully";
                 }
-                res.json(data);
+                defer.resolve(data);
             });
         }else{
             data["item"] = "Please provide required data ";
-            res.json(data);
+            defer.reject(data);
         }
+        return defer.promise;
     },
 
-    getItems : function(req,res) {
+    getItems : function(req) {
+        var defer = Q.defer();
         var data = {
             "Data":""
         };
-        var db = req.db;
         req.db.collection('items').find().toArray(function (err, items) {
             if(items.length != 0){
                 data["error"] = 0;
                 data["items"] = items;
-                res.json(data);
+               defer.resolve(data);
             }else{
                 data["error"] = 1;
                 data["items"] = 'No items Found..';
-                res.json(data);
+                defer.reject(data);
             }
         });
+        return defer.promise;
     }
 
 }

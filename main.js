@@ -6,9 +6,8 @@ var routes = require('./routes/');
 var db = mongo.db("mongodb://localhost:27017/items", {native_parser:true});
 server.use(bodyParser.urlencoded({ extended: false }));
 server.use(bodyParser.json());
-server.use(function(req,res,next){
-  console.log("server");
 
+server.use(function(req,res,next){
   req.db = db;
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
